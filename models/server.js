@@ -1,6 +1,6 @@
 const express = require('express')
 const path = require("path");
-const { dbConnection } = require('../database/config');
+const { db } = require('../database/config');
 // const cors = require('cors')
 // const { options } = require('../doc/swagger')
 //  const swaggerUi = require('swagger-ui-express');
@@ -13,13 +13,13 @@ class Server {
         this.app = express();
         this.port = process.env.PORT;
         // this.productsPath = '/api/products';
-        // this.usersPath = '/api/users';
+         this.usersPath = '/api/users';
         // this.loginPath = '/api/auth'
         this.connect();
         //Middlewares
-       // this.middlewares();
+        // this.middlewares();
         //Rutas de mi aplicacion 
-      //  this.routes();
+         this.routes();
 
     }
 
@@ -27,7 +27,7 @@ class Server {
 
     routes(){
         // this.app.use(this.productsPath, require('../routes/products'))
-        // this.app.use(this.usersPath, require('../routes/user'))
+         this.app.use(this.usersPath, require('../routes/user'))
         // this.app.use(this.loginPath, require('../routes/auth'))
     }
 
@@ -49,7 +49,13 @@ class Server {
     }
 
     async connect(){
-       await dbConnection()
+        
+        try {
+            await db.authenticate();
+            console.log('Connection has been established successfully.');
+          } catch (error) {
+            console.error('Unable to connect to the database:', error);
+          }
     }
 
     
